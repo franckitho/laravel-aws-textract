@@ -1,12 +1,12 @@
 <?php
 
-namespace VendorName\Skeleton\Commands;
+namespace Franckitho\Textract\Commands;
 
 use Illuminate\Console\Command;
 
-class SkeletonCommand extends Command
+class TextractCommand extends Command
 {
-    public $signature = 'skeleton';
+    public $signature = 'laravel-aws-textract';
 
     public $description = 'My command';
 
