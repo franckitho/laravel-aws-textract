@@ -9,8 +9,10 @@ use Aws\Textract\TextractClient;
 class AnalyseDocument
 {
     private TextractClient $client;
-    private String | array $features;
-    private String $bytes;
+
+    private string|array $features;
+
+    private string $bytes;
 
     public function __construct()
     {
@@ -29,24 +31,26 @@ class AnalyseDocument
     /**
      * Set the features for the document analysis.
      *
-     * @param string|array $features The features to be set for the analysis. It can be a single feature as a string or multiple features as an array.
+     * @param  string|array  $features  The features to be set for the analysis. It can be a single feature as a string or multiple features as an array.
      * @return $this
      */
-    public function features(String | array $features)
+    public function features(string|array $features)
     {
         $this->features = $features;
+
         return $this;
     }
 
     /**
      * Sets the bytes property.
      *
-     * @param string $bytes The byte data to be set.
+     * @param  string  $bytes  The byte data to be set.
      * @return $this
      */
-    public function file(String $bytes)
+    public function file(string $bytes)
     {
         $this->bytes = $bytes;
+
         return $this;
     }
 

@@ -2,9 +2,9 @@
 
 namespace Franckitho\Textract\Tests;
 
+use Franckitho\Textract\TextractServiceProvider;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Orchestra\Testbench\TestCase as Orchestra;
-use Franckitho\Textract\TextractServiceProvider;
 
 class TestCase extends Orchestra
 {

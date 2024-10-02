@@ -14,7 +14,7 @@ class TextractServiceProvider extends PackageServiceProvider
             ->hasConfigFile('aws-textract');
 
         $this->app->bind('analyseDocument', function () {
-            return new AnalyseDocument();
+            return new AnalyseDocument;
         });
     }
 }
