@@ -6,6 +6,8 @@ namespace Franckitho\Textract;
 
 use Aws\Result;
 use Aws\Textract\TextractClient;
+use Franckitho\Exceptions\FileOrBucketNotFoundException;
+use Franckitho\Exceptions\InvalidMethodChainException;
 use Illuminate\Support\Collection;
 
 class AnalyseDocument
@@ -14,9 +16,11 @@ class AnalyseDocument
 
     private string|array $features;
 
-    private string $bytes;
+    private ?string $file = null;
 
     private Result $result;
+
+    private ?array $s3Object = null;
 
     private bool $wantMetadata = false;
 
@@ -38,7 +42,7 @@ class AnalyseDocument
      * Set the features for the document analysis.
      *
      * @param  string|array  $features  The features to be set for the analysis. It can be a single feature as a string or multiple features as an array.
-     * @return $this
+     * @return self
      */
     public function features(string|array $features)
     {
@@ -48,14 +52,39 @@ class AnalyseDocument
     }
 
     /**
-     * Sets the bytes property.
+     * Sets the file property.
      *
-     * @param  string  $bytes  The byte data to be set.
-     * @return $this
+     * @param  string  $file  The byte data to be set.
+     * @return self
+     *
+     * @throws InvalidMethodChainException If the file method has already been called.
      */
-    public function file(string $bytes)
+    public function file(string $file)
     {
-        $this->bytes = $bytes;
+        when($this->s3Object, fn () => throw new InvalidMethodChainException);
+
+        $this->file = $file;
+
+        return $this;
+    }
+
+    /**
+     * Sets the S3 object details.
+     *
+     * @param  string  $bucket  The name of the S3 bucket.
+     * @param  string  $filepath  The path to the file in the S3 bucket.
+     * @return self Returns the instance of the class for method chaining.
+     *
+     * @throws InvalidMethodChainException If the file method has already been called.
+     */
+    public function s3(string $bucket, string $filepath)
+    {
+        when($this->file, fn () => throw new InvalidMethodChainException);
+
+        $this->s3Object = [
+            'Bucket' => $bucket,
+            'Name' => $filepath,
+        ];
 
         return $this;
     }
@@ -66,7 +95,7 @@ class AnalyseDocument
      * This method sets the internal flag to indicate that metadata should be included
      * in the analysis results. It returns the current instance to allow for method chaining.
      *
-     * @return $this The current instance with metadata retrieval enabled.
+     * @return self The current instance with metadata retrieval enabled.
      */
     public function withMetaData()
     {
@@ -96,9 +125,7 @@ class AnalyseDocument
     {
         return $this->client->analyzeDocument([
             'FeatureTypes' => $this->features,
-            'Document' => [
-                'Bytes' => file_get_contents($this->bytes),
-            ],
+            'Document' => $this->getFileOrBucket(),
         ]);
     }
 
@@ -121,5 +148,31 @@ class AnalyseDocument
                 '@metadata' => $this->result->get('@metadata'),
             ];
         }, collect($this->result->get('Blocks')));
+    }
+
+    /**
+     * Retrieves the file or bucket information.
+     *
+     * This method checks if the bytes property is set and returns an array with the 'Bytes' key.
+     * If the bytes property is not set, it checks if the s3Object property is set and returns an array with the 'S3Object' key.
+     * If neither property is set, it throws a FileOrBucketNotFoundException.
+     *
+     * @return array The file or bucket information.
+     *
+     * @throws FileOrBucketNotFoundException If neither bytes nor s3Object properties are set.
+     */
+    protected function getFileOrBucket(): array
+    {
+        if ($this->file) {
+            return [
+                'Bytes' => file_get_contents($this->file),
+            ];
+        } elseif ($this->s3Object) {
+            return [
+                'S3Object' => $this->s3Object,
+            ];
+        } else {
+            throw new FileOrBucketNotFoundException;
+        }
     }
 }
