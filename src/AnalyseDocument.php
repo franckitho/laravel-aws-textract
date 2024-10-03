@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Franckitho\Textract;
 
+use Aws\Result;
 use Aws\Textract\TextractClient;
+use Illuminate\Support\Collection;
 
 class AnalyseDocument
 {
@@ -13,6 +15,10 @@ class AnalyseDocument
     private string|array $features;
 
     private string $bytes;
+
+    private Result $result;
+
+    private bool $wantMetadata = false;
 
     public function __construct()
     {
@@ -54,7 +60,39 @@ class AnalyseDocument
         return $this;
     }
 
-    public function analyze()
+    /**
+     * Enable metadata retrieval for the document analysis.
+     *
+     * This method sets the internal flag to indicate that metadata should be included
+     * in the analysis results. It returns the current instance to allow for method chaining.
+     *
+     * @return $this The current instance with metadata retrieval enabled.
+     */
+    public function withMetaData()
+    {
+        $this->wantMetadata = true;
+
+        return $this;
+    }
+
+    /**
+     * Analyzes the document and returns the result as a collection of blocks.
+     *
+     * @return array|Collection The analyzed document blocks.
+     */
+    public function analyze(): array|Collection
+    {
+        $this->result = $this->fetchAwsTextract();
+
+        return $this->formatResult();
+    }
+
+    /**
+     * Fetches the document analysis from AWS Textract.
+     *
+     * @return Aws\Result The result of the document analysis.
+     */
+    protected function fetchAwsTextract(): Result
     {
         return $this->client->analyzeDocument([
             'FeatureTypes' => $this->features,
@@ -62,5 +100,26 @@ class AnalyseDocument
                 'Bytes' => file_get_contents($this->bytes),
             ],
         ]);
+    }
+
+    /**
+     * Formats the result of the document analysis.
+     *
+     * This method returns an array or a Collection based on the value of the 
+     * $this->wantMetadata property. If $this->wantMetadata is true, it returns 
+     * an array containing 'Blocks', 'DocumentMetadata', and '@metadata'. 
+     * Otherwise, it returns a Collection of 'Blocks'.
+     *
+     * @return array|Collection The formatted result of the document analysis.
+     */
+    protected function formatResult(): array|Collection
+    {
+        return when($this->wantMetadata, function () {
+            return [
+                'Blocks' => collect($this->result->get('Blocks')),
+                'DocumentMetadata' => $this->result->get('DocumentMetadata'),
+                '@metadata' => $this->result->get('@metadata'),
+            ];
+        }, collect($this->result->get('Blocks')));
     }
 }
