@@ -90,7 +90,7 @@ class AnalyseDocument
     /**
      * Fetches the document analysis from AWS Textract.
      *
-     * @return Aws\Result The result of the document analysis.
+     * @return Result The result of the document analysis.
      */
     protected function fetchAwsTextract(): Result
     {
