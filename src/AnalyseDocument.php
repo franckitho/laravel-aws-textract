@@ -105,9 +105,9 @@ class AnalyseDocument
     /**
      * Formats the result of the document analysis.
      *
-     * This method returns an array or a Collection based on the value of the 
-     * $this->wantMetadata property. If $this->wantMetadata is true, it returns 
-     * an array containing 'Blocks', 'DocumentMetadata', and '@metadata'. 
+     * This method returns an array or a Collection based on the value of the
+     * $this->wantMetadata property. If $this->wantMetadata is true, it returns
+     * an array containing 'Blocks', 'DocumentMetadata', and '@metadata'.
      * Otherwise, it returns a Collection of 'Blocks'.
      *
      * @return array|Collection The formatted result of the document analysis.
