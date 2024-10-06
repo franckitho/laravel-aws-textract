@@ -47,21 +47,21 @@ return  [
 ```php
 use franckitho\Textract;
 
-$document = Textract::feature('LAYOUT')->file('path/to/file')->analyze();
+$document = Textract::features('LAYOUT')->file('path/to/file')->analyze();
 ```
 
 ##### With S3 Bucket (need S3 permission)
 ```php
 use franckitho\Textract;
 
-$document = Textract::feature('LAYOUT')->s3('bucket', 'file')->analyze();
+$document = Textract::features('LAYOUT')->s3('bucket', 'file')->analyze();
 ```
 
 ##### For showing metadata
 ```php
 use franckitho\Textract;
 
-$document = Textract::feature('LAYOUT')->file('path/to/file')->withMetaData()->analyze();
+$document = Textract::features('LAYOUT')->file('path/to/file')->withMetaData()->analyze();
 ```
 
 ## Testing
