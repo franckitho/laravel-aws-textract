@@ -5,15 +5,14 @@
 [![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/franckitho/laravel-aws-textract/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/franckitho/laravel-aws-textract/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/franckitho/laravel-aws-textract.svg?style=flat-square)](https://packagist.org/packages/franckitho/laravel-aws-textract)
 
-This is where your description should go. Limit it to a paragraph or two. Consider adding a small example.
+Simple wrapper for [AWS Textract](https://aws.amazon.com/fr/textract/) (OCR Software, Data Extraction Tool) 
 
-## Support us
-
-[<img src="https://github-ads.s3.eu-central-1.amazonaws.com/laravel-aws-textract.jpg?t=1" width="419px" />](https://spatie.be/github-ad-click/laravel-aws-textract)
-
-We invest a lot of resources into creating [best in class open source packages](https://spatie.be/open-source). You can support us by [buying one of our paid products](https://spatie.be/open-source/support-us).
-
-We highly appreciate you sending us a postcard from your hometown, mentioning which of our package(s) you are using. You'll find our address on [our contact page](https://spatie.be/about-us). We publish all received postcards on [our virtual postcard wall](https://spatie.be/open-source/postcards).
+## Features
+- [x] Analyze Document
+- [ ] Analyze ID card
+- [ ] Analyze Invoice
+- [ ] Query-based extraction
+- [ ] Signature detection  
 
 ## Installation
 
@@ -21,13 +20,6 @@ You can install the package via composer:
 
 ```bash
 composer require franckitho/laravel-aws-textract
-```
-
-You can publish and run the migrations with:
-
-```bash
-php artisan vendor:publish --tag="laravel-aws-textract-migrations"
-php artisan migrate
 ```
 
 You can publish the config file with:
@@ -39,21 +31,37 @@ php artisan vendor:publish --tag="laravel-aws-textract-config"
 This is the contents of the published config file:
 
 ```php
-return [
+return  [
+    'region' => env('AWS_REGION', 'us-east-1'),
+    'version' => env('AWS_TEXTRACT_VERSION', 'latest'),
+    'credentials' => [
+        'key' => env('AWS_ACCESS_KEY_ID'),
+        'secret' => env('AWS_SECRET_ACCESS_KEY'),
+    ],
 ];
-```
-
-Optionally, you can publish the views using
-
-```bash
-php artisan vendor:publish --tag="laravel-aws-textract-views"
 ```
 
 ## Usage
 
+##### With local file or url
 ```php
-$textract = new Franckitho\Textract();
-echo $textract->echoPhrase('Hello, Franckitho!');
+use franckitho\Textract;
+
+$document = Textract::feature('LAYOUT')->file('path/to/file')->analyze();
+```
+
+##### With S3 Bucket (need S3 permission)
+```php
+use franckitho\Textract;
+
+$document = Textract::feature('LAYOUT')->s3('bucket', 'file')->analyze();
+```
+
+##### For showing metadata
+```php
+use franckitho\Textract;
+
+$document = Textract::feature('LAYOUT')->file('path/to/file')->withMetaData()->analyze();
 ```
 
 ## Testing
