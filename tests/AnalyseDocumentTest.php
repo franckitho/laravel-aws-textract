@@ -10,6 +10,9 @@ use Illuminate\Support\Collection;
 beforeEach(function () {
     $this->mockTextractClient = Mockery::mock(TextractClient::class);
 
+    $this->app['config']->set('aws-textract.credentials.key', 'test-key');
+    $this->app['config']->set('aws-textract.credentials.secret', 'test-secret');
+
     $mockResult = Mockery::mock(Result::class);
     $mockResult->shouldReceive('get')
         ->with('Blocks')->andReturn([]);
@@ -18,20 +21,16 @@ beforeEach(function () {
     $mockResult->shouldReceive('get')
         ->with('@metadata')->andReturn([]);
 
-    $this->app['config']->set('aws-textract.credentials.key', 'test-key');
-    $this->app['config']->set('aws-textract.credentials.secret', 'test-secret');
-
     $this->mockTextractClient->shouldReceive('analyzeDocument')
         ->andReturn($mockResult);
 
     $this->analyseDocument = new AnalyseDocument();
-
+    
     $reflection = new ReflectionClass($this->analyseDocument);
     $clientProperty = $reflection->getProperty('client');
     $clientProperty->setAccessible(true);
     $clientProperty->setValue($this->analyseDocument, $this->mockTextractClient);
 });
-
 
 it('can set features', function () {
     $this->analyseDocument->features(['TABLES', 'FORMS']);
@@ -91,7 +90,6 @@ it('throws exception if no file or s3 object is set', function () {
 })->throws(FileOrBucketNotFoundException::class);
 
 it('analyzes document and formats result', function () {
-
     $tempFile = tempnam(sys_get_temp_dir(), 'testfile');
     file_put_contents($tempFile, 'fake file content');
 
