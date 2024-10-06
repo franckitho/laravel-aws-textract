@@ -62,7 +62,7 @@ class AnalyseDocument
     public function file(string $file)
     {
         if ($this->s3Object) {
-            throw new InvalidMethodChainException();
+            throw new InvalidMethodChainException;
         }
 
         $this->file = $file;
@@ -82,7 +82,7 @@ class AnalyseDocument
     public function s3(string $bucket, string $filepath)
     {
         if ($this->file) {
-            throw new InvalidMethodChainException();
+            throw new InvalidMethodChainException;
         }
 
         $this->s3Object = [
