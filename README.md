@@ -1,11 +1,11 @@
-# Wrapper for AWS Textract
+# Laravel AWS Textract
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/franckitho/laravel-aws-textract.svg?style=flat-square)](https://packagist.org/packages/franckitho/laravel-aws-textract)
 [![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/franckitho/laravel-aws-textract/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/franckitho/laravel-aws-textract/actions?query=workflow%3Arun-tests+branch%3Amain)
 [![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/franckitho/laravel-aws-textract/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/franckitho/laravel-aws-textract/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/franckitho/laravel-aws-textract.svg?style=flat-square)](https://packagist.org/packages/franckitho/laravel-aws-textract)
 
-Simple wrapper for [AWS Textract](https://aws.amazon.com/fr/textract/) (OCR Software, Data Extraction Tool) 
+Simple [AWS Textract](https://aws.amazon.com/fr/textract/) (OCR Software, Data Extraction Tool) wrapper for Laravel
 
 ## Features
 - [x] Analyze Document
