@@ -2,7 +2,6 @@
 
 namespace Franckitho\Textract;
 
-use Franckitho\Textract\Commands\TextractCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
