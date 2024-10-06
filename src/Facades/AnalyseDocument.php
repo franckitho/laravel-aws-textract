@@ -7,10 +7,10 @@ use Illuminate\Support\Facades\Facade;
 /**
  * @see \Franckitho\Textract\Textract
  */
-class Textract extends Facade
+class AnalyseDocument extends Facade
 {
     protected static function getFacadeAccessor(): string
     {
-        return \Franckitho\Textract\Textract::class;
+        return \Franckitho\Textract\AnalyseDocument::class;
     }
 }
