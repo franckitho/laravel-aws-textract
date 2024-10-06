@@ -2,16 +2,16 @@
 
 use Aws\Result;
 use Aws\Textract\TextractClient;
-use Illuminate\Support\Collection;
-use Franckitho\Textract\AnalyseDocument;
-use Franckitho\Exceptions\InvalidMethodChainException;
 use Franckitho\Exceptions\FileOrBucketNotFoundException;
+use Franckitho\Exceptions\InvalidMethodChainException;
+use Franckitho\Textract\AnalyseDocument;
+use Illuminate\Support\Collection;
 
 beforeEach(function () {
     $this->mockTextractClient = Mockery::mock(TextractClient::class);
 
     // Instancier AnalyseDocument
-    $this->analyseDocument = new AnalyseDocument();
+    $this->analyseDocument = new AnalyseDocument;
 
     // Utiliser Reflection pour accéder à la propriété privée $client
     $reflection = new ReflectionClass($this->analyseDocument);
@@ -28,7 +28,7 @@ it('can set features', function () {
     $featuresProperty->setAccessible(true);
 
     $features = $featuresProperty->getValue($this->analyseDocument);
-    
+
     expect($features)->toEqual(['TABLES', 'FORMS']);
 });
 
@@ -40,24 +40,24 @@ it('can set file', function () {
     $fileProperty->setAccessible(true);
 
     $file = $fileProperty->getValue($this->analyseDocument);
-    
+
     expect($file)->toEqual('path/to/file');
 });
 
 it('can set S3 object', function () {
-        $this->analyseDocument->s3('bucket','file');
+    $this->analyseDocument->s3('bucket', 'file');
 
     $reflection = new ReflectionClass($this->analyseDocument);
     $s3ObjectProperty = $reflection->getProperty('s3Object');
     $s3ObjectProperty->setAccessible(true);
 
     $s3Object = $s3ObjectProperty->getValue($this->analyseDocument);
-    
+
     expect($s3Object)->toEqual(['Bucket' => 'bucket', 'Name' => 'file']);
 });
 
 it('throws exception when setting file after s3Object', function () {
-    $this->analyseDocument->s3('bucket','file');
+    $this->analyseDocument->s3('bucket', 'file');
     $this->analyseDocument->file('path/to/file');
 })->throws(InvalidMethodChainException::class);
 
@@ -69,7 +69,7 @@ it('can enable metadata retrieval', function () {
     $wantMetadataProperty->setAccessible(true);
 
     $wantMetadata = $wantMetadataProperty->getValue($this->analyseDocument);
-    
+
     expect($wantMetadata)->toBeTrue();
 });
 
