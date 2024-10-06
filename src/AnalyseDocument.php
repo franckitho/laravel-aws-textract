@@ -61,7 +61,9 @@ class AnalyseDocument
      */
     public function file(string $file)
     {
-        when($this->s3Object, fn () => throw new InvalidMethodChainException);
+        if ($this->s3Object) {
+            throw new InvalidMethodChainException();
+        }
 
         $this->file = $file;
 
@@ -79,7 +81,9 @@ class AnalyseDocument
      */
     public function s3(string $bucket, string $filepath)
     {
-        when($this->file, fn () => throw new InvalidMethodChainException);
+        if ($this->file) {
+            throw new InvalidMethodChainException();
+        }
 
         $this->s3Object = [
             'Bucket' => $bucket,
@@ -141,13 +145,15 @@ class AnalyseDocument
      */
     protected function formatResult(): array|Collection
     {
-        return when($this->wantMetadata, function () {
+        if ($this->wantMetadata) {
             return [
                 'Blocks' => collect($this->result->get('Blocks')),
                 'DocumentMetadata' => $this->result->get('DocumentMetadata'),
                 '@metadata' => $this->result->get('@metadata'),
             ];
-        }, collect($this->result->get('Blocks')));
+        } else {
+            return collect($this->result->get('Blocks'));
+        }
     }
 
     /**
