@@ -35,8 +35,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Franckitho\\Textract\\": "src/",
-            "Franckitho\\Exceptions\\": "src/Exceptions/"
+            "Franckitho\\Textract\\": "src/"
         }
     },
     "autoload-dev": {
