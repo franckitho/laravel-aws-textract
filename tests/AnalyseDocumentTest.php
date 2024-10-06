@@ -10,7 +10,7 @@ use Illuminate\Support\Collection;
 beforeEach(function () {
     // Créer un mock pour TextractClient
     $this->mockTextractClient = Mockery::mock(TextractClient::class);
-    
+
     // Simuler le résultat du document
     $mockResult = Mockery::mock(Result::class);
     $mockResult->shouldReceive('get')
@@ -25,15 +25,14 @@ beforeEach(function () {
         ->andReturn($mockResult);
 
     // Instancier AnalyseDocument
-    $this->analyseDocument = new AnalyseDocument();
-    
+    $this->analyseDocument = new AnalyseDocument;
+
     // Utiliser Reflection pour accéder à la propriété privée $client
     $reflection = new ReflectionClass($this->analyseDocument);
     $clientProperty = $reflection->getProperty('client');
     $clientProperty->setAccessible(true);
     $clientProperty->setValue($this->analyseDocument, $this->mockTextractClient);
 });
-
 
 it('can set features', function () {
     $this->analyseDocument->features(['TABLES', 'FORMS']);
