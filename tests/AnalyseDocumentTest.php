@@ -8,17 +8,32 @@ use Franckitho\Textract\AnalyseDocument;
 use Illuminate\Support\Collection;
 
 beforeEach(function () {
+    // Créer un mock pour TextractClient
     $this->mockTextractClient = Mockery::mock(TextractClient::class);
+    
+    // Simuler le résultat du document
+    $mockResult = Mockery::mock(Result::class);
+    $mockResult->shouldReceive('get')
+        ->with('Blocks')->andReturn([]);
+    $mockResult->shouldReceive('get')
+        ->with('DocumentMetadata')->andReturn([]);
+    $mockResult->shouldReceive('get')
+        ->with('@metadata')->andReturn([]);
+
+    // Configurer le mock pour analyzeDocument
+    $this->mockTextractClient->shouldReceive('analyzeDocument')
+        ->andReturn($mockResult);
 
     // Instancier AnalyseDocument
-    $this->analyseDocument = new AnalyseDocument;
-
+    $this->analyseDocument = new AnalyseDocument();
+    
     // Utiliser Reflection pour accéder à la propriété privée $client
     $reflection = new ReflectionClass($this->analyseDocument);
     $clientProperty = $reflection->getProperty('client');
     $clientProperty->setAccessible(true);
     $clientProperty->setValue($this->analyseDocument, $this->mockTextractClient);
 });
+
 
 it('can set features', function () {
     $this->analyseDocument->features(['TABLES', 'FORMS']);
