@@ -24,8 +24,8 @@ beforeEach(function () {
     $this->mockTextractClient->shouldReceive('analyzeDocument')
         ->andReturn($mockResult);
 
-    $this->analyseDocument = new AnalyseDocument();
-    
+    $this->analyseDocument = new AnalyseDocument;
+
     $reflection = new ReflectionClass($this->analyseDocument);
     $clientProperty = $reflection->getProperty('client');
     $clientProperty->setAccessible(true);
