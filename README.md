@@ -45,23 +45,23 @@ return  [
 
 ##### With local file or url
 ```php
-use franckitho\Textract;
+use franckitho\Textract\AnalyseDocument;
 
-$document = Textract::features('LAYOUT')->file('path/to/file')->analyze();
+$document = AnalyseDocument::features('LAYOUT')->file('path/to/file')->analyze();
 ```
 
 ##### With S3 Bucket (need S3 permission)
 ```php
-use franckitho\Textract;
+use franckitho\Textract\AnalyseDocument;
 
-$document = Textract::features('LAYOUT')->s3('bucket', 'file')->analyze();
+$document = AnalyseDocument::features('LAYOUT')->s3('bucket', 'file')->analyze();
 ```
 
 ##### For showing metadata
 ```php
-use franckitho\Textract;
+use franckitho\Textract\AnalyseDocument;
 
-$document = Textract::features('LAYOUT')->file('path/to/file')->withMetaData()->analyze();
+$document = AnalyseDocument::features('LAYOUT')->file('path/to/file')->withMetaData()->analyze();
 ```
 
 ## Testing
