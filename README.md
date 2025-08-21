@@ -57,7 +57,7 @@ use franckitho\Textract\AnalyseDocument;
 $document = AnalyseDocument::features('LAYOUT')->s3('bucket', 'file')->analyze();
 ```
 
-##### For showing metadata
+##### To show metadata
 ```php
 use franckitho\Textract\AnalyseDocument;
 
